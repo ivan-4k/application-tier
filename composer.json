@@ -1,0 +1,17 @@
+{
+    "name": "klinik/app-klinik",
+    "description": "Klinik Antrian Application Tier",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Student",
+            "email": "student@example.com"
+        }
+    ],
+    "require": {}
+}

@@ -1,38 +1,48 @@
 <?php
-require_once __DIR__ . "/../core/Model.php";
+namespace App\Models;
+
+use App\Core\Model;
 
 class Dokter extends Model {
-
-    public $id;
-    public $nama_dokter;
-    public $spesialis;
-    public $ruangan;
-
-    public function __construct($db) {
-        parent::__construct($db);
-        $this->table = "dokter";
+    protected $table = 'dokter';
+    
+    public function __construct() {
+        parent::__construct();
     }
-
-    public function getAll() {
-        $query = "SELECT * FROM {$this->table} ORDER BY id_dokter ASC";
-        return $this->executeQuery($query);
+    
+    public function getAllActive() {
+        $sql = "SELECT 
+                    id_dokter as id,
+                    nama_dokter as nama,
+                    spesialis,
+                    ruangan,
+                    created_at
+                FROM {$this->table} 
+                WHERE is_active = 1 
+                ORDER BY nama_dokter";
+        
+        $result = $this->query($sql);
+        
+        $dokter = [];
+        while ($row = $result->fetch_assoc()) {
+            $dokter[] = $row;
+        }
+        
+        return $dokter;
     }
-
-    public function getById() {
-        $query = "SELECT * FROM {$this->table} WHERE id_dokter = :id LIMIT 1";
-        $stmt = $this->executeQuery($query, [':id' => $this->id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function create() {
-        $query = "INSERT INTO {$this->table}
-                  (nama_dokter, spesialis, ruangan)
-                  VALUES (:nama, :spesialis, :ruangan)";
-
-        return $this->executeQuery($query, [
-            ':nama' => $this->nama_dokter,
-            ':spesialis' => $this->spesialis,
-            ':ruangan' => $this->ruangan
-        ]);
+    
+    public function getById($id) {
+        $sql = "SELECT 
+                    id_dokter as id,
+                    nama_dokter as nama,
+                    spesialis,
+                    ruangan
+                FROM {$this->table} 
+                WHERE id_dokter = ? AND is_active = 1";
+        
+        $result = $this->query($sql, [$id]);
+        
+        return $result->fetch_assoc();
     }
 }
+?>
