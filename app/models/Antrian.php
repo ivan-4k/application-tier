@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../core/Model.php';
+
 class Antrian extends Model {
 
     public $id;
@@ -12,12 +14,14 @@ class Antrian extends Model {
         $this->table = "antrian";
     }
 
+    // Ambil nomor antrian berikutnya
     public function getNomorTerakhir() {
         $query = "SELECT IFNULL(MAX(nomor_antrian),0) + 1 AS next_no FROM {$this->table}";
         $stmt = $this->executeQuery($query);
         return $stmt->fetch(PDO::FETCH_ASSOC)['next_no'];
     }
 
+    // Create antrian
     public function create() {
         $query = "INSERT INTO {$this->table}
                   (nomor_antrian, id_pasien, id_dokter, status, waktu_ambil)
@@ -30,14 +34,10 @@ class Antrian extends Model {
         ]);
     }
 
-    public function updateStatus($status) {
-        $query = "UPDATE {$this->table}
-                  SET status = :status
-                  WHERE nomor_antrian = :no";
-
-        return $this->executeQuery($query, [
-            ':status' => $status,
-            ':no' => $this->nomor_antrian
-        ]);
+    // Read semua antrian
+    public function getAll() {
+        $query = "SELECT * FROM {$this->table} ORDER BY nomor_antrian ASC";
+        $stmt = $this->executeQuery($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

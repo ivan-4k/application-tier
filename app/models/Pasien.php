@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../core/Model.php';
+
 class Pasien extends Model {
 
     public $id;
@@ -12,6 +14,7 @@ class Pasien extends Model {
         $this->table = "pasien";
     }
 
+    // ===== CREATE =====
     public function create() {
         $query = "INSERT INTO {$this->table}
                   (nama_pasien, umur, alamat, jenis_keluhan)
@@ -29,5 +32,12 @@ class Pasien extends Model {
             return true;
         }
         return false;
+    }
+
+    // ===== READ (GET ALL) =====
+    public function getAll() {
+        $query = "SELECT * FROM {$this->table} ORDER BY id_pasien ASC";
+        $stmt = $this->executeQuery($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
