@@ -9,6 +9,13 @@ class Database {
     public static function getConnection() {
         if (self::$connection === null) {
             try {
+                // INCLUDE Config.php DULU
+                require_once __DIR__ . '/Config.php';
+                
+                if (!class_exists('App\Config\Config')) {
+                    throw new \Exception("Config class not found!");
+                }
+                
                 self::$connection = new mysqli(
                     Config::DB_HOST,
                     Config::DB_USER,
@@ -23,7 +30,7 @@ class Database {
                 self::$connection->set_charset("utf8mb4");
                 
             } catch (\Exception $e) {
-                die("Database Error: " . $e->getMessage());
+                die("❌ Database Error: " . $e->getMessage());
             }
         }
         
